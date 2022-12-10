@@ -1,6 +1,6 @@
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
-const { Tweet, User } = require('../models')
+const { Tweet, User, sequelize } = require('../models')
 const adminController = {
   login: async (req, res, next) => {
     try {
@@ -18,6 +18,25 @@ const adminController = {
       delete userData.password
       const token = jwt.sign(userData, process.env.JWT_SECRET, { expiresIn: '14d' })
       res.status(200).json({ status: 'success', data: { token, user: userData } })
+    } catch (err) {
+      next(err)
+    }
+  },
+  getUsers: async (req, res, next) => {
+    try {
+      const users = await User.findAll({
+        where: { role: 'user' },
+        attributes: [
+          'id', 'account', 'name', 'avatar', 'cover',
+          [sequelize.literal('(SELECT COUNT(*) FROM Tweets WHERE Tweets.User_id = User.id)'), 'tweetsCount'],
+          [sequelize.literal('(SELECT COUNT(*) FROM Likes WHERE Likes.User_id = User.id)'), 'likesCount'],
+          [sequelize.literal('(SELECT COUNT(*) FROM Followships WHERE Followships.follower_id = User.id)'), 'followingsCount'],
+          [sequelize.literal('(SELECT COUNT(*) FROM Followships WHERE Followships.following_id = User.id)'), 'followersCount']
+        ],
+        raw: true,
+        order: [[sequelize.literal('tweetsCount'), 'DESC']]
+      })
+      res.status(200).json({ status: 'success', data: { user: users } })
     } catch (err) {
       next(err)
     }
