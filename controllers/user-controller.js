@@ -26,7 +26,10 @@ const userController = {
     try {
       // check account and password
       const { account, password } = req.body
-      const user = await User.findOne({ where: { account, role: 'user' } })
+      const user = await User.findOne({
+        where: { account, role: 'user' },
+        attributes: { exclude: ['createdAt', 'updatedAt'] }
+      })
       if (!user) return res.status(401).json({ status: 'error', message: '帳號不存在' })
       const isPasswordCorrect = await bcrypt.compare(password, user.password)
       if (!isPasswordCorrect) return res.status(401).json({ status: 'error', message: '帳號或密碼錯誤' })
