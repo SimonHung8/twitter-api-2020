@@ -17,7 +17,7 @@ const adminController = {
       const userData = user.toJSON()
       delete userData.password
       const token = jwt.sign(userData, process.env.JWT_SECRET, { expiresIn: '14d' })
-      res.status(200).json({ status: 'success', data: { token, user: userData } })
+      res.status(200).json({ token, user: userData })
     } catch (err) {
       next(err)
     }
@@ -25,7 +25,6 @@ const adminController = {
   getUsers: async (req, res, next) => {
     try {
       const users = await User.findAll({
-        where: { role: 'user' },
         attributes: [
           'id', 'account', 'name', 'avatar', 'cover',
           [sequelize.literal('(SELECT COUNT(*) FROM Tweets WHERE Tweets.User_id = User.id)'), 'tweetsCount'],
@@ -36,7 +35,7 @@ const adminController = {
         raw: true,
         order: [[sequelize.literal('tweetsCount'), 'DESC']]
       })
-      res.status(200).json({ status: 'success', data: { user: users } })
+      res.status(200).json(users)
     } catch (err) {
       next(err)
     }
@@ -53,7 +52,7 @@ const adminController = {
           ...t,
           description: t.description.substring(0, 50)
         }))
-        res.status(200).json({ status: 'success', data: { tweet: data } })
+        res.status(200).json(data)
       })
       .catch(err => next(err))
   }
