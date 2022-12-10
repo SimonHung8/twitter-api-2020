@@ -1,5 +1,5 @@
 const { Tweet, User } = require('../models')
-const tweeteController = {
+const adminController = {
   getTweets: (req, res, next) => {
     Tweet.findAll({
       include: [{ model: User, attributes: ['id', 'account', 'name', 'avatar'] }],
@@ -17,4 +17,4 @@ const tweeteController = {
       .catch(err => next(err))
   }
 }
-module.exports = tweeteController
+module.exports = adminController
