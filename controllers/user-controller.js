@@ -17,7 +17,7 @@ const userController = {
       let registeredUser = await User.create({ name, account, email, password: hash })
       registeredUser = registeredUser.toJSON()
       delete registeredUser.password
-      res.json({ status: 'success', data: registeredUser })
+      res.status(200).json({ status: 'success', data: { user: registeredUser } })
     } catch (err) {
       next(err)
     }

@@ -53,7 +53,7 @@ const adminController = {
           ...t,
           description: t.description.substring(0, 50)
         }))
-        res.json(data)
+        res.status(200).json({ status: 'success', data: { tweet: data } })
       })
       .catch(err => next(err))
   }
