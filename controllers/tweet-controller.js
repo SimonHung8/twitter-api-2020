@@ -14,20 +14,17 @@ const tweetController = {
           ]
         },
         order: [['createdAt', 'DESC']],
-        raw: true,
-        nest: true
+        raw: true
       })
       const loginUser = getUser(req)?.id
       const likes = await Like.findAll({
         where: { UserId: loginUser },
-        raw: true,
-        nest: true
+        raw: true
       })
-      const data = await tweets.map(tweet =>
+      const data = tweets.map(tweet =>
         ({
           ...tweet,
-          isLiked: likes.some(like => like.TweetId === tweet.id),
-          description: tweet.description.substring(0, 50)
+          isLiked: likes.some(like => like.TweetId === tweet.id)
         })
       )
       res.status(200).json(data)
