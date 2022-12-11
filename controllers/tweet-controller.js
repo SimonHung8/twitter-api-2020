@@ -1,7 +1,7 @@
 const { Tweet, User, sequelize, Like } = require('../models')
 const { getUser } = require('../_helpers')
 
-const tweeteController = {
+const tweetController = {
   getTweets: async (req, res, next) => {
     try {
       const tweets = await Tweet.findAll({
@@ -17,7 +17,7 @@ const tweeteController = {
         raw: true,
         nest: true
       })
-      const loginUser = getUser(req).id
+      const loginUser = getUser(req)?.id
       const likes = await Like.findAll({
         where: { UserId: loginUser },
         raw: true,
@@ -36,4 +36,4 @@ const tweeteController = {
     }
   }
 }
-module.exports = tweeteController
+module.exports = tweetController
