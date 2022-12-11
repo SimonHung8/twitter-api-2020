@@ -8,9 +8,9 @@ const tweetController = {
         include: [{ model: User, attributes: ['id', 'account', 'name', 'avatar'] }],
         attributes: {
           include: [
-            [sequelize.literal(`(SELECT COUNT(*) AS replyCounts FROM ac_twitter_workspace.replies
+            [sequelize.literal(`(SELECT COUNT(*) AS replyCounts FROM replies
           WHERE Tweet_id = tweet.id)`), 'replyCounts'],
-            [sequelize.literal('(SELECT COUNT(*) AS likeCounts FROM ac_twitter_workspace.likes WHERE Tweet_id = tweet.id)'), 'likeCounts']
+            [sequelize.literal('(SELECT COUNT(*) AS likeCounts FROM likes WHERE Tweet_id = tweet.id)'), 'likeCounts']
           ]
         },
         order: [['createdAt', 'DESC']],
