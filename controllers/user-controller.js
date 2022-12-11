@@ -76,6 +76,7 @@ const userController = {
       if (!user) throw new Error("user didn't exist")
       const tweets = await Tweet.findAll({
         where: { UserId: id },
+        include: [{ model: User, attributes: ['account', 'name', 'avatar'] }],
         attributes: {
           include: [
             [sequelize.literal('(SELECT COUNT(*) FROM Replies WHERE Replies.Tweet_id = Tweet.id)'), 'repliesCount'],
@@ -84,7 +85,8 @@ const userController = {
           ]
         },
         order: [['createdAt', 'DESC']],
-        raw: true
+        raw: true,
+        nest: true
       })
       if (!tweets.length) return res.status(200).json([])
       res.status(200).json(tweets)
