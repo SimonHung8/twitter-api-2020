@@ -1,4 +1,4 @@
-const { Tweet, User, sequelize, Like, Reply } = require('../models')
+const { Tweet, User, sequelize, Like } = require('../models')
 const { getUser } = require('../_helpers')
 
 const tweetController = {
@@ -51,14 +51,7 @@ const tweetController = {
       if (!tweet) throw new Error('推文不存在')
       const likes = await Like.findAll({ where: { TweetId: tweetId } })
       const isLiked = likes.some(l => l.UserId === loginUser)
-      const replies = await Reply.findAll({
-        where: { TweetId: tweetId },
-        attributes: ['UserId', 'comment', 'createdAt'],
-        include: [{ model: User, attributes: ['account', 'name', 'avatar'] }],
-        raw: true,
-        nest: true
-      })
-      const data = { ...tweet, isLiked, replies }
+      const data = { ...tweet, isLiked }
       res.status(200).json(data)
     } catch (err) {
       next(err)
