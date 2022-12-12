@@ -17,6 +17,19 @@ const followshipController = {
     } catch (err) {
       next(err)
     }
+  },
+  unfollowUser: async (req, res, next) => {
+    try {
+      const followerId = Number(getUser(req).id)
+      const followingId = Number(req.params.id)
+      if (!followingId) throw new Error('following id is required')
+      const isFollowed = await Followship.findOne({ where: { followerId, followingId } })
+      if (!isFollowed) throw new Error("you haven't followed this user")
+      const data = await isFollowed.destroy()
+      res.status(200).json(data)
+    } catch (err) {
+      next(err)
+    }
   }
 }
 
