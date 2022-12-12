@@ -4,24 +4,24 @@ module.exports = {
 
   up: async (queryInterface, Sequelize) => {
     await queryInterface.addConstraint('Replies', {
-      fields: ['tweet_id'],
+      fields: ['Tweet_id'],
       type: 'foreign key',
       name: 'tweets_replies_constraint',
       references: {
         table: 'Tweets',
         field: 'id'
       },
-      onDelete: 'cascade'
+      onDelete: 'CASCADE'
     })
     await queryInterface.addConstraint('Likes', {
-      fields: ['tweet_id'],
+      fields: ['Tweet_id'],
       type: 'foreign key',
       name: 'tweets_likes_constraint',
       references: {
         table: 'Tweets',
         field: 'id'
       },
-      onDelete: 'cascade'
+      onDelete: 'CASCADE'
     })
   },
 
