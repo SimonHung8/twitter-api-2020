@@ -12,7 +12,7 @@ router.get('/:tweet_id/replies', authenticated, authenticatedUser, tweetControll
 // 使用者取得一則推文
 router.get('/:tweet_id', authenticated, authenticatedUser, tweetController.getTweet)
 // 新增一則推文
-router.post('/', authenticated, authenticatedUser, tweetController.addTweet)
+router.post('/', authenticated, authenticatedUser, tweetController.postTweet)
 // 使用者取得所有推文
 router.get('/', authenticated, authenticatedUser, tweetController.getTweets)
 
