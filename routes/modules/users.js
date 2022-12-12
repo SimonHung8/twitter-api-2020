@@ -14,6 +14,8 @@ router.get('/:id/replied_tweets', authenticated, authenticatedUser, userControll
 router.get('/:id/likes', authenticated, authenticatedUser, userController.getUserLikes)
 // 取得使用者追隨中的人
 router.get('/:id/followings', authenticated, authenticatedUser, userController.getUserFollowings)
+// 取得追隨使用者的人
+router.get('/:id/followers', authenticated, authenticatedUser, userController.getUserFollowers)
 // 取得使用者資料
 router.get('/:id', authenticated, authenticatedUser, userController.getUserProfile)
 // 註冊

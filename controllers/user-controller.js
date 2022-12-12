@@ -166,6 +166,29 @@ const userController = {
     } catch (err) {
       next(err)
     }
+  },
+  getUserFollowers: async (req, res, next) => {
+    try {
+      const { id } = req.params
+      const user = await User.findOne({ where: { id, role: 'user' } })
+      if (!user) throw new Error("user didn't exist")
+      const followings = await Followship.findAll({
+        where: { followingId: id },
+        attributes: {
+          include: [
+            [sequelize.literal('(SELECT name FROM Users WHERE Users.id = Followship.follower_id)'), 'name'],
+            [sequelize.literal('(SELECT account FROM Users WHERE Users.id = Followship.follower_id)'), 'account'],
+            [sequelize.literal('(SELECT introduction FROM Users WHERE Users.id = Followship.follower_id)'), 'introduction'],
+            [sequelize.literal('(SELECT avatar FROM Users WHERE Users.id = Followship.follower_id)'), 'avatar']
+          ]
+        },
+        order: [['createdAt', 'DESC']]
+      })
+      if (!followings.length) return res.status(200).json([])
+      res.status(200).json(followings)
+    } catch (err) {
+      next(err)
+    }
   }
 }
 
