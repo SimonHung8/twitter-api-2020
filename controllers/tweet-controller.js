@@ -87,7 +87,7 @@ const tweetController = {
       })
       if (!tweet) throw new Error('推文不存在')
       if (tweet.isLiked) throw new Error('You have liked this restaurant!')
-      Like.create({
+      await Like.create({
         UserId: loginUser,
         TweetId
       })
