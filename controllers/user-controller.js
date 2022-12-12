@@ -173,7 +173,7 @@ const userController = {
       const { id } = req.params
       const user = await User.findOne({ where: { id, role: 'user' } })
       if (!user) throw new Error("user didn't exist")
-      const followings = await Followship.findAll({
+      const followers = await Followship.findAll({
         where: { followingId: id },
         attributes: {
           include: [
@@ -185,8 +185,8 @@ const userController = {
         },
         order: [['createdAt', 'DESC']]
       })
-      if (!followings.length) return res.status(200).json([])
-      res.status(200).json(followings)
+      if (!followers.length) return res.status(200).json([])
+      res.status(200).json(followers)
     } catch (err) {
       next(err)
     }
