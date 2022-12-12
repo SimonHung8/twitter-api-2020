@@ -1,7 +1,24 @@
-const { Tweet, User, sequelize, Like } = require('../models')
+const { Tweet, User, sequelize, Like, Reply } = require('../models')
 const { getUser } = require('../_helpers')
 
 const tweetController = {
+  getTweetReplies: async (req, res, next) => {
+    try {
+      const tweetId = req.params.tweet_id
+      const replies = await Reply.findAll({
+        where: { TweetId: tweetId },
+        attributes: ['UserId', 'comment', 'createdAt'],
+        include: [{ model: User, attributes: ['account', 'name', 'avatar'] }],
+        order: [['createdAt', 'DESC']],
+        raw: true,
+        nest: true
+      })
+      if (!replies) return res.status(200).json([])
+      res.status(200).json(replies)
+    } catch (err) {
+      next(err)
+    }
+  },
   getTweets: async (req, res, next) => {
     try {
       const tweets = await Tweet.findAll({
@@ -53,6 +70,29 @@ const tweetController = {
       const isLiked = likes.some(l => l.UserId === loginUser)
       const data = { ...tweet, isLiked }
       res.status(200).json(data)
+    } catch (err) {
+      next(err)
+    }
+  },
+  addLike: async (req, res, next) => {
+    try {
+      const loginUser = getUser(req)?.id
+      const TweetId = req.params.id
+      const tweet = await Tweet.findByPk(TweetId, {
+        attributes: {
+          include: [[sequelize.literal(`EXISTS(SELECT true FROM Likes WHERE Likes.User_Id = ${loginUser} AND Likes.Tweet_Id = ${TweetId})`), 'isLiked']],
+          exclude: ['description', 'createdAt', 'updatedAt']
+        },
+        raw: true
+      })
+      if (!tweet) throw new Error('推文不存在')
+      if (tweet.isLiked) throw new Error('You have liked this restaurant!')
+      await Like.create({
+        UserId: loginUser,
+        TweetId
+      })
+      tweet.isLiked = 1
+      res.status(200).json(tweet)
     } catch (err) {
       next(err)
     }
