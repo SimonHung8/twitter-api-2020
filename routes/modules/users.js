@@ -6,6 +6,8 @@ const { authenticated, authenticatedUser } = require('../../middleware/auth')
 
 // 登入
 router.post('/login', userController.login)
+// 取得追隨者前10的使用者
+router.get('/topUsers', authenticated, authenticatedUser, userController.getTopUsers)
 // 取得使用者全部推文
 router.get('/:id/tweets', authenticated, authenticatedUser, userController.getUserTweets)
 // 取得使用者全部回覆
