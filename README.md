@@ -60,7 +60,7 @@ npx sequelize db:seed:all
 8. 啟動專案
 
 ```
-nodemon app.js
+node app.js
 ```
 
 10. 當終端機(terminal)出現以下字樣，代表執行成功
@@ -88,6 +88,9 @@ npx mocha test/{{ Model or Request }}/{{Model or Request}}.spec.js --exit
 - 使用者能進行互動(回覆、追蹤、喜歡、查看top追蹤用戶)
 - 後臺管理者可以瀏覽全站的 Tweet 清單、刪除推文
 - 後臺管理者可以瀏覽站內所有的使用者清單
+
+## API文件
+[API文件](https://www.notion.so/API-c33257dbaed64b4683fa6e8c04dc5b65)
 
 ## 開發人員
 [SimonHung8](https://github.com/SimonHung8)
