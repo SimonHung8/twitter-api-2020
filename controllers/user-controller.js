@@ -208,6 +208,27 @@ const userController = {
     } catch (err) {
       next(err)
     }
+  },
+  editUserSetting: async (req, res, next) => {
+    try {
+      const errors = validationResult(req)
+      if (!errors.isEmpty()) {
+        const errorMessage = errors.errors.map(e => e.msg)
+        throw new Error(errorMessage)
+      }
+      const { name, account, email, password } = req.body
+      const salt = await bcrypt.genSalt(10)
+      const hash = await bcrypt.hash(password, salt)
+      const user = await User.findByPk(getUser(req).id)
+      const updatedUser = await user.update({ name, account, email, password: hash })
+      // sign a new token
+      const userData = updatedUser.toJSON()
+      delete userData.password
+      const token = jwt.sign(userData, process.env.JWT_SECRET, { expiresIn: '14d' })
+      res.status(200).json({ token, user: userData })
+    } catch (err) {
+      next(err)
+    }
   }
 }
 

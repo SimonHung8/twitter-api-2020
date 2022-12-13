@@ -1,8 +1,8 @@
 const express = require('express')
 const router = express.Router()
-const { registerValidator } = require('../../middleware/validator')
+const { registerValidator, editSettingValidator } = require('../../middleware/validator')
 const userController = require('../../controllers/user-controller')
-const { authenticated, authenticatedUser } = require('../../middleware/auth')
+const { authenticated, authenticatedUser, authenticatedSelf } = require('../../middleware/auth')
 
 // 登入
 router.post('/login', userController.login)
@@ -20,6 +20,8 @@ router.get('/:id/followings', authenticated, authenticatedUser, userController.g
 router.get('/:id/followers', authenticated, authenticatedUser, userController.getUserFollowers)
 // 取得使用者資料
 router.get('/:id', authenticated, authenticatedUser, userController.getUserProfile)
+// 編輯使用者帳號設定
+router.put('/:id/setting', authenticated, authenticatedUser, authenticatedSelf, editSettingValidator, userController.editUserSetting)
 // 註冊
 router.post('/', registerValidator, userController.register)
 
