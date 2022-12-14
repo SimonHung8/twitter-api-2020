@@ -59,17 +59,15 @@ const tweetController = {
           include: [
             [sequelize.literal(`(SELECT COUNT(*) AS replyCounts FROM replies
           WHERE Tweet_id = tweet.id)`), 'replyCounts'],
-            [sequelize.literal('(SELECT COUNT(*) AS likeCounts FROM likes WHERE Tweet_id = tweet.id)'), 'likeCounts']
+            [sequelize.literal('(SELECT COUNT(*) AS likeCounts FROM likes WHERE Tweet_id = tweet.id)'), 'likeCounts'],
+            [sequelize.literal(`EXISTS(SELECT true FROM Likes WHERE Likes.User_Id = ${loginUser} AND Likes.Tweet_Id = Tweet.id)`), 'isLiked']
           ]
         },
         raw: true,
         nest: true
       })
       if (!tweet) throw new Error('推文不存在')
-      const likes = await Like.findAll({ where: { TweetId: tweetId } })
-      const isLiked = likes.some(l => l.UserId === loginUser)
-      const data = { ...tweet, isLiked }
-      res.status(200).json(data)
+      res.status(200).json(tweet)
     } catch (err) {
       next(err)
     }
