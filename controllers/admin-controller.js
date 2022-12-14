@@ -35,7 +35,6 @@ const adminController = {
         raw: true,
         order: [[sequelize.literal('tweetCounts'), 'DESC']]
       })
-      if (!users.length) return res.status(200).json([])
       res.status(200).json(users)
     } catch (err) {
       next(err)

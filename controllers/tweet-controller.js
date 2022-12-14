@@ -13,7 +13,6 @@ const tweetController = {
         raw: true,
         nest: true
       })
-      if (!replies.length) return res.status(200).json([])
       res.status(200).json(replies)
     } catch (err) {
       next(err)

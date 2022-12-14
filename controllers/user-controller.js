@@ -90,7 +90,6 @@ const userController = {
         raw: true,
         nest: true
       })
-      if (!tweets.length) return res.status(200).json([])
       res.status(200).json(tweets)
     } catch (err) {
       next(err)
@@ -111,7 +110,6 @@ const userController = {
         raw: true,
         nest: true
       })
-      if (!replies.length) return res.status(200).json([])
       res.status(200).json(replies)
     } catch (err) {
       next(err)
@@ -140,7 +138,6 @@ const userController = {
         raw: true,
         nest: true
       })
-      if (!likes.length) return res.status(200).json([])
       res.status(200).json(likes)
     } catch (err) {
       next(err)
@@ -164,7 +161,6 @@ const userController = {
         order: [['createdAt', 'DESC']],
         raw: true
       })
-      if (!followings.length) return res.status(200).json([])
       res.status(200).json(followings)
     } catch (err) {
       next(err)
@@ -188,7 +184,6 @@ const userController = {
         order: [['createdAt', 'DESC']],
         raw: true
       })
-      if (!followers.length) return res.status(200).json([])
       res.status(200).json(followers)
     } catch (err) {
       next(err)
@@ -207,7 +202,6 @@ const userController = {
         order: [[sequelize.literal('followerCounts'), 'DESC']],
         raw: true
       })
-      if (!users.length) return res.status(200).json([])
       res.status(200).json(users)
     } catch (err) {
       next(err)
