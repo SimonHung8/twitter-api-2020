@@ -47,9 +47,14 @@ const adminController = {
   },
   getTweets: async (req, res, next) => {
     try {
+      const page = Number(req.query.page) || 1
+      const limit = 10
+      const offset = (page - 1) * limit
       const tweets = await Tweet.findAll({
         include: [{ model: User, attributes: ['id', 'account', 'name', 'avatar'] }],
         order: [['createdAt', 'DESC']],
+        limit,
+        offset,
         raw: true,
         nest: true
       })
