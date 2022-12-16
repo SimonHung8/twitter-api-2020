@@ -24,6 +24,9 @@ const adminController = {
   },
   getUsers: async (req, res, next) => {
     try {
+      const page = Number(req.query.page) || 1
+      const limit = 16
+      const offset = (page - 1) * limit
       const users = await User.findAll({
         attributes: [
           'id', 'account', 'name', 'avatar', 'cover',
@@ -32,6 +35,8 @@ const adminController = {
           [sequelize.literal('(SELECT COUNT(*) FROM Followships WHERE Followships.follower_id = User.id)'), 'followingCounts'],
           [sequelize.literal('(SELECT COUNT(*) FROM Followships WHERE Followships.following_id = User.id)'), 'followerCounts']
         ],
+        limit,
+        offset,
         raw: true,
         order: [[sequelize.literal('tweetCounts'), 'DESC']]
       })
