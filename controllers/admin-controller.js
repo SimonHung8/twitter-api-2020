@@ -28,6 +28,7 @@ const adminController = {
       const limit = 16
       const offset = (page - 1) * limit
       const users = await User.findAll({
+        where: { role: 'user' },
         attributes: [
           'id', 'account', 'name', 'avatar', 'cover',
           [sequelize.literal('(SELECT COUNT(*) FROM Tweets WHERE Tweets.User_id = User.id)'), 'tweetCounts'],
